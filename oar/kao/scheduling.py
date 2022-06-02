@@ -399,6 +399,7 @@ def schedule_id_jobs_ct(slots_sets, jobs, hy, id_jobs, job_security_time):
                     **job.assign_kwargs
                 )
             else:
+                logger.info("Assign resources to a moldable job")
                 assign_resources_mld_job_split_slots(slots_set, job, hy, min_start_time)
 
             if "container" in job.types:

@@ -257,6 +257,7 @@ def get_data_jobs(jobs, jids, resource_set, job_security_time, besteffort_durati
     #            .join(JobResourceGroup)\
     #            .join(JobResourceDescription)\
 
+    logger.info(str(result))
     cache_constraints = {}
 
     first_job = True
@@ -290,8 +291,10 @@ def get_data_jobs(jobs, jids, resource_set, job_security_time, besteffort_durati
         #
         if j_id != prev_j_id:
             if first_job:
+                logger.info("First job")
                 first_job = False
             else:
+                logger.info("New job")
                 jrg.append((jr_descriptions, res_constraints))
                 mld_res_rqts.append((prev_mld_id, prev_mld_id_walltime, jrg))
                 job.mld_res_rqts = mld_res_rqts
@@ -321,6 +324,7 @@ def get_data_jobs(jobs, jids, resource_set, job_security_time, besteffort_durati
 
             if moldable_id != prev_mld_id:
                 if jrg != []:
+                    logger.info("Append resources (moldable instance)")
                     jrg.append((jr_descriptions, res_constraints))
                     mld_res_rqts.append((prev_mld_id, prev_mld_id_walltime, jrg))
 
@@ -337,6 +341,7 @@ def get_data_jobs(jobs, jids, resource_set, job_security_time, besteffort_durati
         if jrg_id != prev_jrg_id:
             prev_jrg_id = jrg_id
             if jr_descriptions != []:
+                logger.info("New resource group")
                 jrg.append((jr_descriptions, res_constraints))
                 jr_descriptions = []
 
@@ -344,6 +349,7 @@ def get_data_jobs(jobs, jids, resource_set, job_security_time, besteffort_durati
         # new set job descriptions
         #
         if res_jrg_id != prev_res_jrg_id:
+            logger.info("New resource descriptions")
             prev_res_jrg_id = res_jrg_id
             jr_descriptions = [(res_type, res_value)]
 
@@ -377,11 +383,14 @@ def get_data_jobs(jobs, jids, resource_set, job_security_time, besteffort_durati
                     cache_constraints[sql_constraints] = res_constraints
         else:
             # add next res_type , res_value
+            logger.info("Old resource descriptions")
             jr_descriptions.append((res_type, res_value))
 
     # complete the last job
     jrg.append((jr_descriptions, res_constraints))
+    logger.info(str(mld_res_rqts))
     mld_res_rqts.append((prev_mld_id, prev_mld_id_walltime, jrg))
+    logger.info(str(mld_res_rqts))
 
     job.mld_res_rqts = mld_res_rqts
     job.key_cache = {}
