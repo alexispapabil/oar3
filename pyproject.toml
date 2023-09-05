@@ -119,3 +119,4 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry.plugins."oar.find_func"]
 compact = "oar.kao.custom_scheduling:compact"
+my_find = "oar.kao.custom_scheduling:my_find"
